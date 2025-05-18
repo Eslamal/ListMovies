@@ -7,5 +7,7 @@
         <color name="colorAccent">#FF4081</color> <!-- Pink color -->
         <color name="toolbarBackground">#FF5722</color> <!-- Orange color for Toolbar background -->
         <color name="toolbarTextColor">#FFFFFF</color> <!-- White color for Toolbar text -->
+    <color name="background_light">#F5F5F5</color>
+
 
 </resources>

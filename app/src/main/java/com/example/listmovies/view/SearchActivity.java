@@ -1,6 +1,7 @@
 package com.example.listmovies.view;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +43,8 @@ public class SearchActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         progressBar =findViewById(R.id.progressBar);
-        progressBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(R.color.colorPrimaryDark));
+       setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.listmovies.R;
 import com.squareup.picasso.Picasso;
@@ -22,6 +23,8 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         movieImageView = findViewById(R.id.movieImage);
         titleTextView = findViewById(R.id.movieTitle);

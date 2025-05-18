@@ -1,5 +1,6 @@
 package com.example.listmovies.view;
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,14 +36,14 @@ public class PopularFragment extends Fragment {
     private MovieAdapter movieAdapter;
     private MovieViewModel movieViewModel;
     private ProgressBar progressBar;
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         progressBar = view.findViewById(R.id.progressBar);
-        progressBar.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(R.color.colorPrimaryDark));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         movieAdapter = new MovieAdapter(getContext());
         recyclerView.setAdapter(movieAdapter);

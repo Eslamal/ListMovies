@@ -1,22 +1,40 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp">
+    android:layout_height="240dp"
+    android:layout_margin="8dp"
+    android:background="@drawable/rounded_bg"
+    android:elevation="4dp">
 
     <ImageView
         android:id="@+id/poster"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_overlay" />
 
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:paddingTop="4dp"
-        android:paddingBottom="2dp" />
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:maxLines="2"
+        android:ellipsize="end" />
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:tint="@android:color/white"
+        android:alpha="0.8"
+        tools:ignore="UseAppTint" />
+</FrameLayout>
