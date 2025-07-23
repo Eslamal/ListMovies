@@ -1,0 +1,45 @@
+package com.example.listmovies.view;
+
+import android.os.Bundle;
+import android.view.MenuItem;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.listmovies.R;
+import com.google.android.material.appbar.MaterialToolbar;
+
+public class GenreMoviesActivity extends AppCompatActivity {
+
+    public static final String EXTRA_GENRE_ID = "GENRE_ID";
+    public static final String EXTRA_GENRE_NAME = "GENRE_NAME";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_genre_movies);
+
+        int genreId = getIntent().getIntExtra(EXTRA_GENRE_ID, -1);
+        String genreName = getIntent().getStringExtra(EXTRA_GENRE_NAME);
+
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(genreName != null ? genreName : "Movies");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if (savedInstanceState == null && genreId != -1) {
+            // إنشاء وإضافة الـ Fragment الذي سيعرض قائمة الأفلام
+            GenreMoviesFragment fragment = GenreMoviesFragment.newInstance(genreId);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

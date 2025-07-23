@@ -7,30 +7,34 @@ import java.util.List;
 
 public class MovieMapper {
 
-    public static MovieEntity mapToEntity(Movie movie) {
-        MovieEntity movieEntity = new MovieEntity();
-        movieEntity.setTitle(movie.getTitle());
-        movieEntity.setVote_average(movie.getVoteAverage());
-        movieEntity.setOverview(movie.getOverview());
-        movieEntity.setPoster_path(movie.getPosterPath());
-        movieEntity.setTimestamp(System.currentTimeMillis());
-        return movieEntity;
+    public static MovieEntity mapToEntity(Movie movie, String category) {
+        return new MovieEntity(
+                movie.getId(),
+                movie.getTitle(),
+                movie.getVoteAverage(),
+                movie.getOverview(),
+                movie.getPosterPath(),
+                movie.getReleaseDate(),
+                category
+        );
     }
 
-    public static List<MovieEntity> mapToEntityList(List<Movie> movies) {
+    public static List<MovieEntity> mapToEntityList(List<Movie> movies, String category) {
         List<MovieEntity> movieEntities = new ArrayList<>();
         for (Movie movie : movies) {
-            movieEntities.add(mapToEntity(movie));
+            movieEntities.add(mapToEntity(movie, category));
         }
         return movieEntities;
     }
 
     public static Movie mapToModel(MovieEntity movieEntity) {
         return new Movie(
+                movieEntity.getId(),
                 movieEntity.getTitle(),
-                movieEntity.getVote_average(),
+                movieEntity.getVoteAverage(),
                 movieEntity.getOverview(),
-                movieEntity.getPoster_path()
+                movieEntity.getPosterPath(),
+                movieEntity.getReleaseDate()
         );
     }
 
@@ -42,4 +46,5 @@ public class MovieMapper {
         return movies;
     }
 }
+
 

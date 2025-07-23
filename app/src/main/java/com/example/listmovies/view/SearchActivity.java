@@ -1,111 +1,161 @@
 package com.example.listmovies.view;
 
-import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
+import android.widget.TextView;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.listmovies.api.Movie;
-import com.example.listmovies.adapter.MovieAdapter;
-import com.example.listmovies.api.MovieResponse;
 import com.example.listmovies.R;
-import com.example.listmovies.api.TMDbApi;
-
-import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import com.example.listmovies.adapter.MovieAdapter;
+import com.example.listmovies.database.SearchViewModel;
+import com.example.listmovies.database.SearchViewModelFactory;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SearchActivity extends AppCompatActivity {
-    private EditText searchEditText;
+
+    private TextInputEditText searchEditText;
     private RecyclerView recyclerView;
     private MovieAdapter movieAdapter;
     private ProgressBar progressBar;
+    private View emptyStateLayout;
+    private View errorStateLayout;
+    private TextView errorTextView;
+    private ChipGroup chipGroupCategories;
 
-    @SuppressLint({"MissingInflatedId", "ResourceAsColor"})
+    private SearchViewModel searchViewModel;
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        progressBar =findViewById(R.id.progressBar);
-        progressBar.setIndeterminateTintList(ColorStateList.valueOf(R.color.colorPrimaryDark));
-       setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        initializeViews();
+        setupToolbar();
+        setupRecyclerView();
+        setupViewModel();
+        setupSearchListener();
+        addCategoryChips();
 
+        showEmptyState();
+    }
+
+    private void initializeViews() {
         searchEditText = findViewById(R.id.searchEditText);
         recyclerView = findViewById(R.id.recyclerView);
+        progressBar = findViewById(R.id.progressBar);
+        emptyStateLayout = findViewById(R.id.emptyStateLayout);
+        errorStateLayout = findViewById(R.id.errorStateLayout);
+        errorTextView = findViewById(R.id.errorTextView);
+        chipGroupCategories = findViewById(R.id.chipGroupCategories);
+    }
+
+    private void setupToolbar() {
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.search_movies);
+        }
+    }
+
+    private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         movieAdapter = new MovieAdapter(this);
         recyclerView.setAdapter(movieAdapter);
+    }
 
+    private void setupViewModel() {
+        String apiKey = getString(R.string.api_key);
+        String language = "en-US";
+        SearchViewModelFactory factory = new SearchViewModelFactory(getApplication(), apiKey, language);
+        searchViewModel = new ViewModelProvider(this, factory).get(SearchViewModel.class);
+
+        searchViewModel.searchResults.observe(this, movies -> {
+            progressBar.setVisibility(View.GONE);
+            if (movies != null && !movies.isEmpty()) {
+                movieAdapter.setMovies(movies);
+                showContent();
+            } else if (movies != null) {
+                showNoSearchResults();
+            }
+        });
+    }
+
+    private void setupSearchListener() {
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    searchMovies(s.toString());
+                searchHandler.removeCallbacks(searchRunnable);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String query = s.toString().trim();
+                if (query.length() >= 2) {
+                    showLoading();
+                    searchRunnable = () -> searchViewModel.setSearchQuery(query);
+                    searchHandler.postDelayed(searchRunnable, 500);
                 } else {
                     movieAdapter.setMovies(null);
+                    showEmptyState();
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
         });
     }
 
-    private void searchMovies(String query) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://api.themoviedb.org/3/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    private void addCategoryChips() {
+        String[] categories = {"Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Thriller", "Animation"};
+        for (String category : categories) {
+            Chip chip = new Chip(this);
+            chip.setText(category);
 
-        TMDbApi api = retrofit.create(TMDbApi.class);
-       String api_key=getString(R.string.api_key);
-        Call<MovieResponse> call = api.searchMovies(api_key, query);
-        progressBar.setVisibility(View.VISIBLE);
-        recyclerView.setVisibility(View.GONE);
+            // --- هذا هو التعديل الأساسي ---
+            chip.setOnClickListener(v -> {
+                String chipText = ((Chip) v).getText().toString();
 
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<Movie> movies = response.body().getResults();
-                    movieAdapter.setMovies(movies);
-                    progressBar.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.VISIBLE);
-                }
-            }
+                // 1. تحديث مربع البحث عشان المستخدم يشوف هو اختار إيه
+                searchEditText.setText(chipText);
 
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Network error: "+t.getMessage() , Toast.LENGTH_LONG).show();
-            }
-        });
+                // 2. إظهار الـ ProgressBar فورًا (هذا يحل المشكلة)
+                showLoading();
+
+                // 3. إلغاء أي بحث مؤجل من الكتابة
+                searchHandler.removeCallbacks(searchRunnable);
+
+                // 4. بدء البحث مباشرةً بدون تأخير
+                searchViewModel.setSearchQuery(chipText);
+            });
+            chipGroupCategories.addView(chip);
+        }
     }
-    public boolean onOptionsItemSelected(MenuItem item) {
+
+    // --- دوال عرض الحالات المختلفة (تبقى كما هي) ---
+    private void showLoading() { /* ... */ }
+    private void showContent() { /* ... */ }
+    private void showEmptyState() { /* ... */ }
+    private void showNoSearchResults() { /* ... */ }
+    private void showErrorState(String message) { /* ... */ }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;

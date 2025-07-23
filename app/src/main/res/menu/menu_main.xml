@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!-- Search action with custom icon -->
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
-        app:showAsAction="always" />
+        android:icon="@android:drawable/ic_search_category_default"
+        android:title="@string/search_movies"
+        android:contentDescription="@string/search_movies"
+        app:showAsAction="always"
+        app:iconTint="@android:color/white" />
+
+
+    <!-- Favorites -->
     <item
-        android:id="@+id/action_change_language"
-        android:title="@string/change_language"
-        android:orderInCategory="100"
-        android:showAsAction="never" />
+        android:id="@+id/action_favorites"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/favorites"
+        android:contentDescription="@string/view_favorites"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_watchlist"
+        android:icon="@drawable/ic_bookmark"
+        android:title="@string/watchlist"
+        android:contentDescription="View Watchlist"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_theme"
+        android:icon="@drawable/ic_palette"
+        android:title="@string/theme"
+        android:orderInCategory="101" />
+
+
+
+
 </menu>
+

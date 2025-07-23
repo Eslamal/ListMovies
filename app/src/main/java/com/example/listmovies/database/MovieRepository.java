@@ -2,16 +2,13 @@ package com.example.listmovies.database;
 
 import android.content.Context;
 import android.util.Log;
-
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-
 import com.example.listmovies.api.Movie;
 import com.example.listmovies.api.MovieResponse;
 import com.example.listmovies.api.TMDbApi;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,10 +17,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieRepository {
     private static final String TAG = "MovieRepository";
-    private static final long CACHE_EXPIRY = 4 * 60 * 60 * 1000;
-
     private final TMDbApi api;
-    private final MovieDao movieDao;
+
+    /**
+     * واجهة Callback للتواصل بين الـ Repository والـ ViewModel.
+     */
+    public interface OnMoviesFetchedListener {
+        void onSuccess(List<Movie> movies);
+        void onFailure();
+    }
 
     public MovieRepository(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -31,55 +33,87 @@ public class MovieRepository {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(TMDbApi.class);
-        movieDao = AppDatabase.getInstance(context).movieDao();
+        // تم حذف كود قاعدة البيانات مؤقتًا للتركيز على التحميل التدريجي
     }
 
-    public LiveData<List<Movie>> getMovies(String apiKey, String category) {
-        MutableLiveData<List<Movie>> moviesLiveData = new MutableLiveData<>();
+    /**
+     * الدالة الجديدة لجلب الأفلام التي تقبل رقم الصفحة و Callback.
+     * @param page رقم الصفحة المطلوب تحميلها.
+     * @param listener الـ Callback الذي سيتم استدعاؤه عند اكتمال الطلب.
+     */
+    public void fetchMovies(String apiKey, String category, String language, int page, OnMoviesFetchedListener listener) {
+        Call<MovieResponse> call;
+        if ("popular".equals(category)) {
+            // استدعاء دالة الـ API الجديدة التي تقبل رقم الصفحة
+            call = api.getPopularMovies(apiKey, language, page);
+        } else if ("top_rated".equals(category)) {
+            // استدعاء دالة الـ API الجديدة التي تقبل رقم الصفحة
+            call = api.getTopRatedMovies(apiKey, language, page);
+        } else {
+            Log.e(TAG, "Unknown movie category: " + category);
+            listener.onFailure();
+            return;
+        }
 
-        new Thread(() -> {
-            long lastUpdated = movieDao.getTimestamp();
-            long currentTime = System.currentTimeMillis();
-
-            if (currentTime - lastUpdated < CACHE_EXPIRY) {
-
-                List<MovieEntity> movieEntities = movieDao.getAllMovies();
-                moviesLiveData.postValue(MovieMapper.mapToModelList(movieEntities));
-            } else {
-                Call<MovieResponse> call;
-                if (category.equals("popular")) {
-                    call = api.getPopularMovies(apiKey);
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
+                    // في حالة النجاح، نرسل قائمة الأفلام الجديدة إلى الـ ViewModel
+                    listener.onSuccess(response.body().getResults());
                 } else {
-                    call = api.getTopRatedMovies(apiKey);
+                    Log.e(TAG, "API response was not successful: " + response.message());
+                    listener.onFailure();
                 }
-
-                call.enqueue(new Callback<MovieResponse>() {
-                    @Override
-                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            List<Movie> movies = response.body().getResults();
-                            moviesLiveData.postValue(movies);
-
-
-                            new Thread(() -> {
-                                movieDao.deleteAllMovies();
-                                movieDao.insertMovies(MovieMapper.mapToEntityList(movies));
-                            }).start();
-                        } else {
-                            Log.e(TAG, "Response not successful: " + response.message());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<MovieResponse> call, Throwable t) {
-                        Log.e(TAG, "Network request failed: " + t.getMessage());
-                    }
-                });
             }
-        }).start();
 
-        return moviesLiveData;
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, "Network request failed: " + t.getMessage());
+                listener.onFailure();
+            }
+        });
     }
 
-}
+    /**
+     * دالة البحث تبقى كما هي في الوقت الحالي.
+     */
+    public LiveData<List<Movie>> searchMovies(String apiKey, String query, String language) {
+        MutableLiveData<List<Movie>> searchResultsLiveData = new MutableLiveData<>();
+        api.searchMovies(apiKey, query, language).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    searchResultsLiveData.postValue(response.body().getResults());
+                } else {
+                    searchResultsLiveData.postValue(null);
+                }
+            }
 
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                searchResultsLiveData.postValue(null);
+            }
+        });
+        return searchResultsLiveData;
+    }
+
+
+    public void fetchMoviesByGenre(String apiKey, String language, int genreId, int page, OnMoviesFetchedListener listener) {
+        api.discoverMoviesByGenre(apiKey, language, genreId, page).enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<MovieResponse> call, @NonNull Response<MovieResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    listener.onSuccess(response.body().getResults());
+                } else {
+                    listener.onFailure();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<MovieResponse> call, @NonNull Throwable t) {
+                listener.onFailure();
+            }
+        });
+    }
+}

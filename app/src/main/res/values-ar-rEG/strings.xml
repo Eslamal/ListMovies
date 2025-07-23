@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">قائمة الأفلام</string>
-    <string name="api_url">https://api.example.com</string>
-    <string name="api_key">6f02d05e6bdd3ccc3c5856f543ed736e</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="change_language">تغير اللغة</string>
-</resources>

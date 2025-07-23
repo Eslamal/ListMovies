@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryVariant">#212121</color>
+    <color name="colorSecondary">#FF5722</color>
+    <color name="colorSecondaryVariant">#E64A19</color>
+    <color name="red">#FF0000</color>
+
+    <color name="colorSurface">#121212</color>
+    <color name="colorBackground">#121212</color>
+    <color name="background_light">#1E1E1E</color>
+    <color name="colorSurfaceVariant">#2C2C2C</color>
+
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+    <color name="colorOnSurface">#FFFFFF</color>
+    <color name="colorOnBackground">#FFFFFF</color>
+    <color name="colorOnSurfaceVariant">#BDBDBD</color>
+
+    <color name="tab_indicator">#FFFFFF</color>
+    <color name="tab_text_unselected">#B3FFFFFF</color>
+    <color name="tab_ripple">#33FFFFFF</color>
+
+    <color name="rating_star">#FFD700</color>
+    <color name="rating_text">#FF8F00</color>
+
+    <color name="error_color">#F44336</color>
+
+    <color name="colorOutline">#424242</color>
+
+    <color name="black">#FFFFFFFF</color>
+    <color name="white">#FF000000</color>
+</resources>
+

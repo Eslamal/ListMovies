@@ -8,10 +8,21 @@ public class MovieEntity {
     @PrimaryKey
     private int id;
     private String title;
-    private double vote_average;
+    private double voteAverage;
     private String overview;
-    private String poster_path;
-    private long timestamp;
+    private String posterPath;
+    private String releaseDate;
+    private String category; // To distinguish between popular and top_rated movies
+
+    public MovieEntity(int id, String title, double voteAverage, String overview, String posterPath, String releaseDate, String category) {
+        this.id = id;
+        this.title = title;
+        this.voteAverage = voteAverage;
+        this.overview = overview;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
+        this.category = category;
+    }
 
     public int getId() {
         return id;
@@ -29,12 +40,12 @@ public class MovieEntity {
         this.title = title;
     }
 
-    public double getVote_average() {
-        return vote_average;
+    public double getVoteAverage() {
+        return voteAverage;
     }
 
-    public void setVote_average(double vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getOverview() {
@@ -45,20 +56,29 @@ public class MovieEntity {
         this.overview = overview;
     }
 
-    public String getPoster_path() {
-        return poster_path;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public long getTimestamp() {
-        return timestamp;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
+
 

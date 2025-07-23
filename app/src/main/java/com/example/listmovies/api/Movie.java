@@ -1,17 +1,34 @@
 package com.example.listmovies.api;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Movie {
+    @SerializedName("id")
+    private int id;
     private String title;
-    private double vote_average;
+    @SerializedName("vote_average")
+    private double voteAverage;
     private String overview;
-    private String poster_path;
+    @SerializedName("poster_path")
+    private String posterPath;
+    @SerializedName("release_date")
+    private String releaseDate;
 
-
-    public Movie(String title, double vote_average, String overview, String poster_path) {
+    public Movie(int id, String title, double voteAverage, String overview, String posterPath, String releaseDate) {
+        this.id = id;
         this.title = title;
-        this.vote_average = vote_average;
+        this.voteAverage = voteAverage;
         this.overview = overview;
-        this.poster_path = poster_path;
+        this.posterPath = posterPath;
+        this.releaseDate = releaseDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -23,11 +40,11 @@ public class Movie {
     }
 
     public double getVoteAverage() {
-        return vote_average;
+        return voteAverage;
     }
 
-    public void setVoteAverage(double vote_average) {
-        this.vote_average = vote_average;
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
     }
 
     public String getOverview() {
@@ -39,11 +56,20 @@ public class Movie {
     }
 
     public String getPosterPath() {
-        return poster_path;
+        return posterPath;
     }
 
-    public void setPosterPath(String poster_path) {
-        this.poster_path = poster_path;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }
+
 

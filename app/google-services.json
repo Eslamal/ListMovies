@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "232415888298",
+    "firebase_url": "https://chat-5d093-default-rtdb.firebaseio.com",
+    "project_id": "chat-5d093",
+    "storage_bucket": "chat-5d093.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232415888298:android:c32d6c4ce6808f09eaa1d3",
+        "android_client_info": {
+          "package_name": "com.example.listmovies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqKGaGTK7R3cR60oKUDm-ZQqsir3lY9t8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
