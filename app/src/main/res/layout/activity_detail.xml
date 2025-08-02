@@ -18,7 +18,7 @@
             android:background="@color/colorPrimary"
             android:layout_height="?attr/actionBarSize"
             app:titleTextColor="@android:color/white"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIcon="?attr/homeAsUpIndicator"
             app:navigationIconTint="@android:color/white"
             app:layout_collapseMode="pin"
             android:elevation="0dp"
@@ -40,9 +40,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        android:contentDescription="@string/share_via"
         android:src="@drawable/ic_share"
-        app:tint="@android:color/white"
         app:backgroundTint="?attr/colorSecondary"
-        android:contentDescription="@string/share_movie" />
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

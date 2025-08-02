@@ -9,8 +9,10 @@ import com.example.listmovies.api.ActorDetails;
 import com.example.listmovies.api.CastMember;
 import com.example.listmovies.api.CountrySpecificProviders;
 import com.example.listmovies.api.CreditsResponse;
+import com.example.listmovies.api.Movie;
 import com.example.listmovies.api.Provider;
 import com.example.listmovies.api.TMDbApi;
+import com.example.listmovies.api.TvShowDetails;
 import com.example.listmovies.api.Video;
 import com.example.listmovies.api.VideoResponse;
 import com.example.listmovies.api.WatchProviderResults;
@@ -115,9 +117,14 @@ public class DetailRepository {
     }
 
 
-    public LiveData<List<CastMember>> getMovieCast(int movieId, String apiKey) {
+    public LiveData<List<CastMember>> getMovieCast(int movieId, String apiKey, String originalLanguage) {
         MutableLiveData<List<CastMember>> castLiveData = new MutableLiveData<>();
-        tmDbApi.getMovieCredits(movieId, apiKey).enqueue(new Callback<CreditsResponse>() {
+
+        // Determine the language for the API call
+        String languageForApi = "ar".equals(originalLanguage) ? "ar-EG" : "en-US";
+
+        // Use the new getMovieCredits method from the API interface
+        tmDbApi.getMovieCredits(movieId, apiKey, languageForApi).enqueue(new Callback<CreditsResponse>() {
             @Override
             public void onResponse(@NonNull Call<CreditsResponse> call, @NonNull Response<CreditsResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -126,7 +133,6 @@ public class DetailRepository {
                     castLiveData.postValue(null);
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<CreditsResponse> call, @NonNull Throwable t) {
                 castLiveData.postValue(null);
@@ -134,6 +140,47 @@ public class DetailRepository {
         });
         return castLiveData;
     }
+
+    public LiveData<TvShowDetails> getTvShowDetails(int tvId, String apiKey, String originalLanguage) {
+        MutableLiveData<TvShowDetails> detailsLiveData = new MutableLiveData<>();
+
+        // Determine the language for the API call
+        String languageForApi = "ar".equals(originalLanguage) ? "ar-EG" : "en-US";
+
+        // Use the new getTvShowDetails method from the API interface
+        tmDbApi.getTvShowDetails(tvId, apiKey, languageForApi).enqueue(new Callback<TvShowDetails>() {
+            @Override
+            public void onResponse(@NonNull Call<TvShowDetails> call, @NonNull Response<TvShowDetails> response) {
+                detailsLiveData.postValue(response.isSuccessful() ? response.body() : null);
+            }
+            @Override
+            public void onFailure(@NonNull Call<TvShowDetails> call, @NonNull Throwable t) {
+                detailsLiveData.postValue(null);
+            }
+        });
+        return detailsLiveData;
+    }
+
+    public LiveData<List<CastMember>> getTvShowCast(int tvId, String apiKey, String originalLanguage) {
+        MutableLiveData<List<CastMember>> castLiveData = new MutableLiveData<>();
+
+        // Determine the language for the API call
+        String languageForApi = "ar".equals(originalLanguage) ? "ar-EG" : "en-US";
+
+        // Use the new getTvShowCredits method from the API interface
+        tmDbApi.getTvShowCredits(tvId, apiKey, languageForApi).enqueue(new Callback<CreditsResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<CreditsResponse> call, @NonNull Response<CreditsResponse> response) {
+                castLiveData.postValue(response.isSuccessful() ? response.body().getCast() : null);
+            }
+            @Override
+            public void onFailure(@NonNull Call<CreditsResponse> call, @NonNull Throwable t) {
+                castLiveData.postValue(null);
+            }
+        });
+        return castLiveData;
+    }
+
 
     public LiveData<ActorDetails> getActorDetails(int actorId, String apiKey) {
         MutableLiveData<ActorDetails> actorDetailsLiveData = new MutableLiveData<>();
@@ -159,8 +206,17 @@ public class DetailRepository {
         return watchlistMovieDao.isMovieInWatchlistLiveData(movieId);
     }
 
+    public void toggleFavoriteStatus(FavoriteMovieEntity movie) {
+        databaseExecutor.execute(() -> {
+            if (favoriteMovieDao.isMovieFavorite(movie.getId())) {
+                favoriteMovieDao.deleteFavoriteMovie(movie);
+            } else {
+                favoriteMovieDao.insertFavoriteMovie(movie);
+            }
+        });
+    }
+
     public void toggleWatchlistStatus(FavoriteMovieEntity movie) {
-        // نقوم بتحويل الـ Entity للنوع الصحيح
         WatchlistMovieEntity watchlistMovie = new WatchlistMovieEntity(
                 movie.getId(), movie.getTitle(), movie.getVoteAverage(),
                 movie.getOverview(), movie.getPosterPath(), movie.getReleaseDate()
@@ -205,6 +261,80 @@ public class DetailRepository {
         });
 
         return resultLiveData;
+    }
+
+
+
+
+    public LiveData<String> getTvShowTrailerUrl(int tvId, String apiKey) {
+        MutableLiveData<String> trailerUrlLiveData = new MutableLiveData<>();
+        tmDbApi.getTvShowVideos(tvId, apiKey).enqueue(new Callback<VideoResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<VideoResponse> call, @NonNull Response<VideoResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String youtubeKey = findBestTrailerKey(response.body().getResults());
+                    trailerUrlLiveData.postValue(youtubeKey != null ? "https://www.youtube.com/embed/" + youtubeKey : null);
+                } else {
+                    trailerUrlLiveData.postValue(null);
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<VideoResponse> call, @NonNull Throwable t) {
+                trailerUrlLiveData.postValue(null);
+            }
+        });
+        return trailerUrlLiveData;
+    }
+
+
+
+    public LiveData<WatchProvidersResult> getTvShowWatchProviders(int tvId, String apiKey) {
+        MutableLiveData<WatchProvidersResult> resultLiveData = new MutableLiveData<>();
+        tmDbApi.getTvShowWatchProviders(tvId, apiKey).enqueue(new Callback<WatchProviderResults>() {
+            @Override
+            public void onResponse(@NonNull Call<WatchProviderResults> call, @NonNull Response<WatchProviderResults> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().getResults() != null) {
+                    String countryCode = Locale.getDefault().getCountry();
+                    CountrySpecificProviders providersForCountry = response.body().getResults().get(countryCode);
+                    if (providersForCountry != null) {
+                        List<Provider> flatrateProviders = providersForCountry.getFlatrate() != null ? providersForCountry.getFlatrate() : new ArrayList<>();
+                        resultLiveData.postValue(new WatchProvidersResult(flatrateProviders, providersForCountry.getLink()));
+                    } else {
+                        resultLiveData.postValue(new WatchProvidersResult(new ArrayList<>(), null));
+                    }
+                } else {
+                    resultLiveData.postValue(null);
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<WatchProviderResults> call, @NonNull Throwable t) {
+                resultLiveData.postValue(null);
+            }
+        });
+        return resultLiveData;
+    }
+
+
+    public LiveData<Movie> getMovieDetails(int movieId, String apiKey, String originalLanguage) {
+        MutableLiveData<Movie> movieDetailsLiveData = new MutableLiveData<>();
+        String languageForApi = "ar".equals(originalLanguage) ? "ar-EG" : "en-US";
+
+        tmDbApi.getMovieDetails(movieId, apiKey, languageForApi).enqueue(new Callback<Movie>() {
+            @Override
+            public void onResponse(@NonNull Call<Movie> call, @NonNull Response<Movie> response) {
+                if (response.isSuccessful()) {
+                    movieDetailsLiveData.postValue(response.body());
+                } else {
+                    movieDetailsLiveData.postValue(null);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Movie> call, @NonNull Throwable t) {
+                movieDetailsLiveData.postValue(null);
+            }
+        });
+        return movieDetailsLiveData;
     }
 }
 

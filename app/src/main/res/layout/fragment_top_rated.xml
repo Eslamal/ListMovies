@@ -47,19 +47,19 @@
                 android:id="@+id/emptyStateImage"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_movie_empty"
                 android:alpha="0.6"
-                android:contentDescription="@string/no_movies" />
+                android:contentDescription="@string/no_movies_in_genre"
+                android:src="@drawable/ic_movie_empty" />
 
             <TextView
                 android:id="@+id/emptyStateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/no_top_rated_movies"
+                android:text="@string/no_movies_in_genre"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -72,11 +72,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/retryButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/retry"
-                style="@style/Widget.Material3.Button.OutlinedButton" />
+                android:text="@string/button_retry" />
 
         </LinearLayout>
 
@@ -93,37 +93,37 @@
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/ic_error"
                 android:alpha="0.6"
-                app:tint="@color/error_color"
-                android:contentDescription="@string/error_occurred" />
+                android:contentDescription="@string/error_generic"
+                android:src="@drawable/ic_error"
+                app:tint="@color/error_color" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/something_went_wrong"
+                android:text="@string/error_generic"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/errorTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/check_internet_connection"
+                android:text="@string/error_no_internet"
+                android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRetryError"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/try_again"
-                style="@style/Widget.Material3.Button" />
+                android:text="@string/button_retry" />
 
         </LinearLayout>
 

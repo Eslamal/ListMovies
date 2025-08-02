@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FavoritesActivity extends AppCompatActivity implements MovieAdapter.OnMovieActionListener {
+public class FavoritesActivity extends BaseActivity implements MovieAdapter.OnMovieActionListener {
 
     private RecyclerView favoritesRecyclerView;
     private TextView emptyFavoritesText;
@@ -42,7 +42,7 @@ public class FavoritesActivity extends AppCompatActivity implements MovieAdapter
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("My Favorites");
+            getSupportActionBar().setTitle(getString(R.string.favorites));
         }
 
         favoritesRecyclerView = findViewById(R.id.favoritesRecyclerView);
@@ -115,7 +115,7 @@ public class FavoritesActivity extends AppCompatActivity implements MovieAdapter
         });
 
         // 4. إظهار رسالة للمستخدم فورًا
-        Toast.makeText(this, movie.getTitle() + " removed from favorites", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, movie.getTitle() + R.string.removed_from_favorites, Toast.LENGTH_SHORT).show();
     }
 
     @Override

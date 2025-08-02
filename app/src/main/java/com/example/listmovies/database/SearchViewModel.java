@@ -1,50 +1,57 @@
 package com.example.listmovies.database;
 
 import android.app.Application;
+import android.content.res.Resources;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-import com.example.listmovies.api.Movie;
+import com.example.listmovies.api.ContentItem;
+import com.example.listmovies.util.LocalHelper;
 import java.util.List;
 
 public class SearchViewModel extends AndroidViewModel {
 
     private final MovieRepository movieRepository;
     private final String apiKey;
-    private final String language;
-
     private final MutableLiveData<String> searchQuery = new MutableLiveData<>();
 
-    // **السطر ده اتغير:** هنا بنعلن عن المتغير بس
-    public final LiveData<List<Movie>> searchResults;
+    // --- 1. RENAMED: Changed from searchResults to results for clarity ---
+    public final LiveData<List<ContentItem>> results;
 
-    public SearchViewModel(@NonNull Application application, String apiKey, String language) {
+    public SearchViewModel(@NonNull Application application, String apiKey) {
         super(application);
-
-        // هنا بندي للمتغيرات قيمتها الأول
         this.movieRepository = new MovieRepository(application);
         this.apiKey = apiKey;
-        this.language = language;
 
-        // **وهنا التغيير الأساسي:** بنعرّف الـ searchResults بعد ما المتغيرات اللي بيعتمد عليها تكون جاهزة
-        this.searchResults = Transformations.switchMap(searchQuery, query -> {
-            if (query == null || query.trim().length() < 2) {
-                MutableLiveData<List<Movie>> emptyResult = new MutableLiveData<>();
-                emptyResult.setValue(null);
-                return emptyResult;
+        // The switchMap now correctly decides what data to fetch
+        this.results = Transformations.switchMap(searchQuery, query -> {
+            String currentLanguageCode = LocalHelper.getPersistedLanguage(getApplication());
+            if (currentLanguageCode.equals("system")) {
+                currentLanguageCode = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
             }
-            // دلوقتي استخدام المتغيرات دي آمن ومفيهوش مشاكل
-            return movieRepository.searchMovies(apiKey, query, language);
+
+            // If the search query is empty or too short, fetch trending content
+            if (query == null || query.trim().isEmpty()) {
+                return movieRepository.fetchTrending(apiKey, currentLanguageCode);
+            } else {
+                // Otherwise, perform a search
+                return movieRepository.searchAllContent(apiKey, query, currentLanguageCode);
+            }
         });
     }
 
-    /**
-     * الدالة دي بنستدعيها من الـ Activity عشان نبدأ عملية بحث جديدة
-     * @param query كلمة البحث اللي كتبها المستخدم
-     */
     public void setSearchQuery(String query) {
         searchQuery.setValue(query);
+    }
+
+    // --- 2. ADDED: The missing loadInitialData() method ---
+    // This method is called to trigger the initial load of trending items.
+    public void loadInitialData() {
+        // By setting the query to an empty string, we trigger the switchMap's "trending" logic.
+        if (searchQuery.getValue() == null || !searchQuery.getValue().isEmpty()) {
+            searchQuery.setValue("");
+        }
     }
 }

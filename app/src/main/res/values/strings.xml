@@ -1,65 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ListMovies</string>
-    <string name="api_url">https://api.example.com</string>
-    <string name="api_key">6f02d05e6bdd3ccc3c5856f543ed736e</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Movies List</string>
+    <string name="api_key" translatable="false">6f02d05e6bdd3ccc3c5856f543ed736e</string>
 
+    <string name="main_tab_movies">Movies</string>
+    <string name="main_tab_tv_shows">TV Shows</string>
+    <string name="main_tab_arabic">Arabic</string>
 
-    <string name="action_dark_mode_text">Dark Mode</string>
-    <string name="action_light_mode_text">Light Mode</string>
-    <string name="dark_mode_on_description">Dark mode is currently enabled. Click to switch to light mode.</string>
-    <string name="light_mode_on_description">Light mode is currently enabled. Click to switch to dark mode.</string>
+    <string name="category_popular">Popular</string>
+    <string name="category_top_rated">Top Rated</string>
+    <string name="category_genres">Genres</string>
+    <string name="no_movies_in_genre">No movies found in this category.</string>
 
+    <string name="details">Details</string>
+    <string name="details_cast">Cast</string>
+    <string name="details_available_on">Available On</string>
+    <string name="details_watch_trailer">Watch Trailer</string>
+    <string name="trailer_not_available">Trailer is not available.</string>
+    <string name="share_movie_prefix">Check out this movie: </string>
+    <string name="share_tv_show_prefix">Check out this TV Show: </string>
+    <string name="share_via">Share via</string>
+    <plurals name="seasons_count">
+        <item quantity="one">%d Season</item>
+        <item quantity="other">%d Seasons</item>
+    </plurals>
 
-    <string name="top_rated">Top Rated</string>
-    <string name="popular">Popular</string>
-    <string name="exit">Exit</string>
-    <string name="exit_confirmation">Are You Want To Exit !!</string>
+    <string name="actor_biography_title">Biography</string>
+    <string name="actor_birth_date">Born: </string>
+    <string name="actor_birth_place">\nIn: </string>
+    <string name="actor_no_biography">No biography available.</string>
+    <string name="actor_details_failed">Failed to load actor details.</string>
 
-    <!-- Movie related strings -->
-    <string name="movie_poster">Movie Poster</string>
-    <string name="movie_backdrop">Movie Backdrop</string>
+    <string name="settings">Settings</string>
+    <string name="search">Search</string>
+    <string name="favorites">Favorites</string>
+    <string name="watchlist">Watchlist</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+    <string-array name="theme_entries">
+        <item>System Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values" translatable="false">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+    <string-array name="language_entries">
+        <item>System Default</item>
+        <item>English</item>
+        <item>العربية</item>
+    </string-array>
+    <string-array name="language_values" translatable="false">
+        <item>system</item>
+        <item>en</item>
+        <item>ar</item>
+    </string-array>
+
+    <string name="favorites_title">My Favorites</string>
+    <string name="watchlist_title">My Watchlist</string>
+    <string name="favorites_empty">No favorite movies yet.</string>
+    <string name="watchlist_empty">Your watchlist is empty.</string>
+    <string name="added_to_favorites">Added to favorites</string>
+    <string name="removed_from_favorites">Removed from favorites</string>
+    <string name="added_to_watchlist">Added to watchlist</string>
+    <string name="removed_from_watchlist">Removed from watchlist</string>
+
+    <string name="search_hint">Search for movies and shows...</string>
+    <string name="search_no_results">No Results Found</string>
+    <string name="search_try_keywords">Try searching with different keywords.</string>
+    <string-array name="search_chip_categories">
+        <item>Action</item>
+        <item>Comedy</item>
+        <item>Drama</item>
+        <item>Sci-Fi</item>
+        <item>Horror</item>
+        <item>Thriller</item>
+        <item>Animation</item>
+    </string-array>
+
+    <string name="dialog_close">Close</string>
+    <string name="dialog_exit_title">Exit App</string>
+    <string name="dialog_exit_message">Are you sure you want to exit?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
+    <string name="error_generic">An error occurred. Please try again.</string>
+    <string name="error_no_internet">Please check your internet connection.</string>
+    <string name="error_no_content">No content available at the moment.</string>
+    <string name="button_retry">Retry</string>
+
+    <string name="pull_to_refresh">Pull to refresh</string>
+    <string name="movie_poster">Movie poster</string>
+    <string name="sample_movie_title">Sample Movie Title</string>
+    <string name="sample_movie_overview">This is a sample movie overview that describes the plot and main characters of the movie.</string>
+    <string name="movie_poster_description">Movie poster</string>
     <string name="rating">Rating</string>
     <string name="release_date">Release Date</string>
     <string name="add_to_favorites">Add to Favorites</string>
     <string name="share_movie">Share Movie</string>
+    <string name="arabic_movies">Arabic Movies</string>
+    <string name="arabic_tv_shows">Arabic TV Shows</string>
+    <string name="category_egyptian">Egyptian</string>
+    <string name="category_gulf">Gulf</string>
+    <string name="error_load_genres">Failed to load genres</string>
 
-    <!-- Search related strings -->
-    <string name="search_movies">Search Movies</string>
-    <string name="search_movies_hint">Search for movies...</string>
-    <string name="no_search_results">No results found</string>
-    <string name="try_different_keywords">Try different keywords</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="genre_suggestions">Genre Suggestions</string>
+    <string name="trending_now">Trending Now</string>
+    <string name="search_results_title">Search Results</string>
 
-    <!-- Menu strings -->
-    <string name="filter_movies">Filter Movies</string>
-    <string name="favorites">Favorites</string>
-    <string name="watchlist">Watchlist</string>
-    <string name="view_favorites">View Favorites</string>
-    <string name="settings">Settings</string>
-    <string name="theme">Dark Mode</string>
+     <string name="clear_all">Clear All</string>
 
 
-    <!-- Action strings -->
-    <string name="watch_trailer">Watch Trailer</string>
-    <string name="add_to_watchlist">Add to Watchlist</string>
-    <string name="retry">Retry</string>
-    <string name="try_again">Try Again</string>
-
-    <!-- State messages -->
-    <string name="no_movies">No Movies</string>
-    <string name="no_movies_available">No movies available</string>
-    <string name="no_top_rated_movies">No top rated movies available</string>
-    <string name="pull_to_refresh">Pull to refresh</string>
-    <string name="error_occurred">An error occurred</string>
-    <string name="something_went_wrong">Something went wrong</string>
-    <string name="check_internet_connection">Please check your internet connection</string>
-
-    <!-- Sample data -->
-    <string name="sample_movie_title">Sample Movie Title</string>
-    <string name="sample_movie_overview">This is a sample movie overview that describes the plot and main characters of the movie.</string>
-
-    <string name="change_language">Change Language</string>
-    <string name="genres">Genres</string>
 </resources>
-

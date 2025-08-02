@@ -34,7 +34,7 @@
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/colorPrimary</item>
 
-        <item name="windowSplashScreenAnimatedIcon">@drawable/iconn</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
 
         <item name="postSplashScreenTheme">@style/Theme.ListMovies</item>
     </style>

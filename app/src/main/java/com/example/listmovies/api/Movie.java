@@ -13,6 +13,8 @@ public class Movie {
     private String posterPath;
     @SerializedName("release_date")
     private String releaseDate;
+    @SerializedName("original_language")
+    private String originalLanguage;
 
     public Movie(int id, String title, double voteAverage, String overview, String posterPath, String releaseDate) {
         this.id = id;
@@ -69,6 +71,9 @@ public class Movie {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+    public String getOriginalLanguage() {
+        return originalLanguage;
     }
 }
 

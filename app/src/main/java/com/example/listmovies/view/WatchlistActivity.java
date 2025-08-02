@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class WatchlistActivity extends AppCompatActivity implements MovieAdapter.OnMovieActionListener {
+public class WatchlistActivity extends BaseActivity implements MovieAdapter.OnMovieActionListener {
 
     private RecyclerView watchlistRecyclerView;
     private TextView emptyWatchlistText;

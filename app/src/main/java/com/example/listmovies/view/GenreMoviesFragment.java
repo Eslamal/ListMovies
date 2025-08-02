@@ -116,7 +116,7 @@ public class GenreMoviesFragment extends Fragment {
             } else if (movies != null) {
                 showEmptyState();
             } else {
-                showErrorState(getString(R.string.error_occurred));
+                showErrorState(getString(R.string.error_generic));
             }
         });
 
@@ -163,7 +163,7 @@ public class GenreMoviesFragment extends Fragment {
         errorStateLayout.setVisibility(View.GONE);
         TextView emptyText = emptyStateLayout.findViewById(R.id.emptyStateText);
         if (emptyText != null) {
-            emptyText.setText(R.string.no_movies_available); // رسالة عامة
+            emptyText.setText(R.string.no_movies_in_genre); // رسالة عامة
         }
     }
 

@@ -30,5 +30,6 @@
 
     <color name="black">#FFFFFFFF</color>
     <color name="white">#FF000000</color>
+    <color name="shimmer_placeholder">#404040</color>
 </resources>
 

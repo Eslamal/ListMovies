@@ -9,10 +9,10 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/watch_trailer"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+        android:paddingBottom="8dp"
+        android:text="@string/details_watch_trailer"
         android:textAlignment="center"
-        android:paddingBottom="8dp" />
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall" />
 
     <WebView
         android:id="@+id/webViewTrailer"

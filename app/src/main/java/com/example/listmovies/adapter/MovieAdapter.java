@@ -113,14 +113,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
             Intent intent = new Intent(context, DetailActivity.class);
             intent.putExtra("id", movie.getId());
             intent.putExtra("title", movie.getTitle());
-            intent.putExtra("vote", String.valueOf(movie.getVoteAverage()));
-            intent.putExtra("overview", movie.getOverview());
             intent.putExtra("image_url", "https://image.tmdb.org/t/p/w500" + movie.getPosterPath());
-            intent.putExtra("release_date", movie.getReleaseDate());
+
+            // --- THIS IS THE ONLY CHANGE ---
+            // Pass the original language to the detail screen
+            intent.putExtra("original_language", movie.getOriginalLanguage());
+
             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    (Activity) context, // تحويل الـ context إلى Activity
-                    holder.poster, // العنصر الذي سيبدأ منه الحركة
-                    ViewCompat.getTransitionName(holder.poster) // الاسم المشترك الفريد
+                    (Activity) context,
+                    holder.poster,
+                    ViewCompat.getTransitionName(holder.poster)
             );
             context.startActivity(intent, options.toBundle());
         });

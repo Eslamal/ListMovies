@@ -48,20 +48,14 @@
             android:name=".view.GenreMoviesActivity"
             android:exported="false"/>
         <activity
-            android:name=".view.LoginActivity"
+            android:name=".view.TvShowDetailActivity"
             android:exported="false"/>
         <activity
-            android:name=".view.RegisterActivity"
+            android:name=".view.SettingsActivity"
             android:exported="false"/>
-        <activity
-            android:name=".view.ForgotPasswordActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".view.ProfileActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".view.EditProfileActivity"
-            android:exported="false"/>
+
+
+
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

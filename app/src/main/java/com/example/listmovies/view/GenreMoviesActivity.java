@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.listmovies.R;
 import com.google.android.material.appbar.MaterialToolbar;
 
-public class GenreMoviesActivity extends AppCompatActivity {
+public class GenreMoviesActivity extends BaseActivity {
 
     public static final String EXTRA_GENRE_ID = "GENRE_ID";
     public static final String EXTRA_GENRE_NAME = "GENRE_NAME";
@@ -21,7 +21,7 @@ public class GenreMoviesActivity extends AppCompatActivity {
         String genreName = getIntent().getStringExtra(EXTRA_GENRE_NAME);
 
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(genreName != null ? genreName : "Movies");
+        toolbar.setTitle(genreName != null ? genreName : getString(R.string.main_tab_movies));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

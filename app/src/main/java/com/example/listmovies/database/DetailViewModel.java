@@ -9,6 +9,7 @@ import androidx.lifecycle.Transformations;
 
 import com.example.listmovies.api.ActorDetails;
 import com.example.listmovies.api.CastMember;
+import com.example.listmovies.api.Movie;
 import com.example.listmovies.api.Provider;
 
 import java.util.List;
@@ -17,30 +18,36 @@ public class DetailViewModel extends AndroidViewModel {
 
     private final DetailRepository repository;
     private final String apiKey;
+    // 1. ADD THIS VARIABLE
+    private final String originalLanguage;
 
-    // LiveData الخاصة بتفاصيل الفيلم الرئيسية
     public final LiveData<Boolean> isFavorite;
     public final LiveData<String> trailerUrl;
     public final LiveData<List<CastMember>> movieCast;
     public final LiveData<Boolean> isInWatchlist;
     public final LiveData<DetailRepository.WatchProvidersResult> watchProviders;
+    public final LiveData<Movie> movieDetails;
 
-    // LiveData ومتغير التشغيل (Trigger) الخاص بتفاصيل الممثل
     private final MutableLiveData<Integer> actorIdTrigger = new MutableLiveData<>();
-    public final LiveData<ActorDetails> actorDetails; // **الخطوة 1: نعلن عنه هنا فقط**
+    public final LiveData<ActorDetails> actorDetails;
 
-    public DetailViewModel(@NonNull Application application, int movieId, String apiKey) {
+    // 2. MODIFY THE CONSTRUCTOR TO ACCEPT originalLanguage
+    public DetailViewModel(@NonNull Application application, int movieId, String apiKey, String originalLanguage) {
         super(application);
-        // **الخطوة 2: نقوم بتهيئة المتغيرات الأساسية أولاً**
         this.repository = new DetailRepository(application);
-        this.apiKey = apiKey; // يتم الآن تهيئته قبل استخدامه
+        this.apiKey = apiKey;
+        this.originalLanguage = originalLanguage; // ASSIGN THE NEW VARIABLE
+        this.movieDetails = repository.getMovieDetails(movieId, apiKey, this.originalLanguage);
 
-        // تهيئة الـ LiveData الخاصة بتفاصيل الفيلم
+
+        // Initialize LiveData
         this.isFavorite = repository.isFavorite(movieId);
-        this.trailerUrl = repository.getTrailerUrl(movieId, apiKey);
-        this.movieCast = repository.getMovieCast(movieId, apiKey);
         this.isInWatchlist = repository.isMovieInWatchlist(movieId);
         this.watchProviders = repository.getWatchProviders(movieId, apiKey);
+        this.trailerUrl = repository.getTrailerUrl(movieId, apiKey);
+
+        // 3. PASS THE originalLanguage to the repository method
+        this.movieCast = repository.getMovieCast(movieId, apiKey, this.originalLanguage);
 
         this.actorDetails = Transformations.switchMap(actorIdTrigger, id ->
                 repository.getActorDetails(id, this.apiKey)
@@ -55,11 +62,10 @@ public class DetailViewModel extends AndroidViewModel {
             repository.addToFavorites(movie);
         }
     }
+
     public void toggleWatchlistStatus(FavoriteMovieEntity movie) {
         repository.toggleWatchlistStatus(movie);
     }
-
-
 
     public void fetchActorDetails(int actorId) {
         actorIdTrigger.setValue(actorId);

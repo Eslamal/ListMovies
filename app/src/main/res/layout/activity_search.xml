@@ -3,207 +3,151 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_light">
+    android:layout_height="match_parent">
 
-    <!-- AppBar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="8dp">
-
+        android:layout_height="wrap_content">
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
+            android:background="?attr/colorPrimary"
+            app:navigationIcon="?attr/homeAsUpIndicator"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:title="@string/search_movies"
-            app:titleTextColor="@android:color/white"
-            app:navigationIcon="@drawable/ic_arrow_back"
-            app:navigationIconTint="@android:color/white"
-            android:theme="@style/ThemeOverlay.Material3.Dark"
-            app:popupTheme="@style/ThemeOverlay.Material3.Light" />
-
+            app:title="@string/search" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main content -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Search Input with Material Design -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/searchInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            app:boxBackgroundMode="outline"
-            app:boxCornerRadiusTopStart="12dp"
-            app:boxCornerRadiusTopEnd="12dp"
-            app:boxCornerRadiusBottomStart="12dp"
-            app:boxCornerRadiusBottomEnd="12dp"
-            app:startIconDrawable="@drawable/ic_search"
-            app:endIconMode="clear_text"
-            app:hintTextColor="?attr/colorOnSurfaceVariant"
-            app:boxStrokeColor="?attr/colorPrimary"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-
+            android:layout_margin="16dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/searchEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/search_movies_hint"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:textSize="16sp"
-                android:maxLines="1" />
-
+                android:hint="@string/search_hint" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Search suggestions chips -->
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupCategories"
+        <RelativeLayout
+            android:id="@+id/recent_searches_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="8dp"
-            app:chipSpacingHorizontal="8dp"
-            android:visibility="visible">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipAction"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Action"
-                style="@style/Widget.Material3.Chip.Filter" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipComedy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Comedy"
-                style="@style/Widget.Material3.Chip.Filter" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipDrama"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Drama"
-                style="@style/Widget.Material3.Chip.Filter" />
-
-        </com.google.android.material.chip.ChipGroup>
-
-        <!-- Results RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            tools:listitem="@layout/item_movie" />
-
-        <!-- Empty state -->
-        <LinearLayout
-            android:id="@+id/emptyStateLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="32dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:id="@+id/emptyStateImage"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/ic_search_empty"
-                android:alpha="0.6"
-                android:contentDescription="@string/no_search_results" />
-
-            <TextView
-                android:id="@+id/emptyStateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/no_search_results"
-                android:textSize="18sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
+            android:paddingStart="16dp"
+            android:paddingEnd="4dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/try_different_keywords"
-                android:textSize="14sp"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
-
-        </LinearLayout>
-
-        <!-- Error state -->
-        <LinearLayout
-            android:id="@+id/errorStateLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:padding="32dp"
-            android:visibility="gone">
-
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/ic_error"
-                android:alpha="0.6"
-                app:tint="@color/error_color"
-                android:contentDescription="@string/error_occurred" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/something_went_wrong"
-                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/errorTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/check_internet_connection"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:textAlignment="center" />
+                android:text="@string/recent_searches"
+                android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/retryButton"
+                android:id="@+id/button_clear_history"
+                style="@style/Widget.Material3.Button.TextButton.Icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/try_again"
-                style="@style/Widget.Material3.Button" />
+                android:text="@string/clear_all"
+                app:icon="@drawable/ic_delete"
+                app:iconSize="16dp"
+                android:layout_alignParentEnd="true"/>
 
-        </LinearLayout>
+        </RelativeLayout>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:singleLine="true" />
+        </HorizontalScrollView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/genre_suggestions"
+            android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginTop="8dp"/>
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_genres"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                app:singleLine="true" />
+        </HorizontalScrollView>
+
+
+        <TextView
+            android:id="@+id/text_view_results_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/trending_now"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmer_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                tools:visibility="visible">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/item_movie_placeholder" />
+                    <include layout="@layout/item_movie_placeholder" />
+                    <include layout="@layout/item_movie_placeholder" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="8dp"
+                android:clipToPadding="false"
+                tools:listitem="@layout/item_movie" />
+
+            <LinearLayout
+                android:id="@+id/emptyStateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+            </LinearLayout>
+
+        </FrameLayout>
 
     </LinearLayout>
 
-    <!-- Loading indicator -->
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminate="true"
-        app:indicatorColor="?attr/colorPrimary"
-        android:visibility="gone" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

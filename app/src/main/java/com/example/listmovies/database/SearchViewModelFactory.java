@@ -8,19 +8,20 @@ import androidx.lifecycle.ViewModelProvider;
 public class SearchViewModelFactory implements ViewModelProvider.Factory {
     private final Application application;
     private final String apiKey;
-    private final String language;
+    // --- MODIFIED: Removed the 'language' variable ---
 
-    public SearchViewModelFactory(Application application, String apiKey, String language) {
+    // --- MODIFIED: Removed the 'language' parameter from the constructor ---
+    public SearchViewModelFactory(Application application, String apiKey) {
         this.application = application;
         this.apiKey = apiKey;
-        this.language = language;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(SearchViewModel.class)) {
-            return (T) new SearchViewModel(application, apiKey, language);
+            // --- MODIFIED: Call the new constructor without 'language' ---
+            return (T) new SearchViewModel(application, apiKey);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

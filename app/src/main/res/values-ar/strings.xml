@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ListMovies</string>
+
+    <string name="main_tab_movies">أفلام</string>
+    <string name="main_tab_tv_shows">مسلسلات</string>
+    <string name="main_tab_arabic">عربي</string>
+
+    <string name="category_popular">الأكثر شعبية</string>
+    <string name="category_top_rated">الأعلى تقييماً</string>
+    <string name="category_genres">الأنواع</string>
+    <string name="no_movies_in_genre">لا توجد أفلام في هذا القسم.</string>
+
+    <string name="details">التفاصيل</string>
+    <string name="details_cast">طاقم العمل</string>
+    <string name="details_available_on">متوفر على</string>
+    <string name="details_watch_trailer">شاهد الإعلان</string>
+    <string name="trailer_not_available">الإعلان غير متاح حالياً.</string>
+    <string name="share_movie_prefix">شاهد هذا الفيلم: </string>
+    <string name="share_tv_show_prefix">شاهد هذا المسلسل: </string>
+    <string name="share_via">مشاركة عبر</string>
+    <plurals name="seasons_count">
+        <item quantity="zero">%d مواسم</item>
+        <item quantity="one">موسم واحد</item>
+        <item quantity="two">موسمان</item>
+        <item quantity="few">%d مواسم</item>
+        <item quantity="many">%d موسم</item>
+        <item quantity="other">%d مواسم</item>
+    </plurals>
+
+    <string name="actor_biography_title">السيرة الذاتية</string>
+    <string name="actor_birth_date">تاريخ الميلاد: </string>
+    <string name="actor_birth_place">\nمكان الميلاد: </string>
+    <string name="actor_no_biography">لا توجد سيرة ذاتية متاحة.</string>
+    <string name="actor_details_failed">فشل تحميل بيانات الممثل.</string>
+
+    <string name="settings">الإعدادات</string>
+    <string name="search">بحث</string>
+    <string name="favorites">المفضلة</string>
+    <string name="watchlist">قائمة المشاهدة</string>
+    <string name="theme">الثيم</string>
+    <string name="language">اللغة</string>
+
+    <string name="favorites_title">مفضلتي</string>
+    <string name="watchlist_title">قائمتي للمشاهدة</string>
+    <string name="favorites_empty">لا توجد أفلام في المفضلة بعد.</string>
+    <string name="watchlist_empty">قائمة المشاهدة فارغة.</string>
+    <string name="added_to_favorites">تمت الإضافة إلى المفضلة</string>
+    <string name="removed_from_favorites">تم الحذف من المفضلة</string>
+    <string name="added_to_watchlist">تمت الإضافة إلى قائمة المشاهدة</string>
+    <string name="removed_from_watchlist">تم الحذف من قائمة المشاهدة</string>
+
+    <string name="search_hint">ابحث عن أفلام ومسلسلات...</string>
+    <string name="search_no_results">لا توجد نتائج</string>
+    <string name="search_try_keywords">حاول البحث بكلمات مختلفة.</string>
+    <string-array name="search_chip_categories">
+       <item>أكشن</item>
+        <item>كوميدي</item>
+        <item>دراما</item>
+        <item>خيال علمي</item>
+        <item>رعب</item>
+        <item>إثارة</item>
+        <item>رسوم متحركة</item>
+    </string-array>
+
+    <string name="dialog_close">إغلاق</string>
+    <string name="dialog_exit_title">الخروج من التطبيق</string>
+    <string name="dialog_exit_message">هل أنت متأكد أنك تريد الخروج؟</string>
+    <string name="dialog_yes">نعم</string>
+    <string name="dialog_no">لا</string>
+    <string name="error_generic">حدث خطأ ما، يرجى المحاولة مرة أخرى.</string>
+    <string name="error_no_internet">يرجى التحقق من اتصالك بالإنترنت.</string>
+    <string name="error_no_content">لا يوجد محتوى متاح حالياً.</string>
+    <string name="button_retry">إعادة المحاولة</string>
+
+    <string name="pull_to_refresh">اسحب للأسفل للتحديث</string>
+    <string name="movie_poster">Movie poster</string>
+    <string name="sample_movie_title">Sample Movie Title</string>
+    <string name="sample_movie_overview">This is a sample movie overview that describes the plot and main characters of the movie.</string>
+    <string name="movie_poster_description">ملصق الفيلم</string>
+    <string name="rating">التقييم</string>
+    <string name="release_date">تاريخ الإصدار</string>
+    <string name="add_to_favorites">إضافة إلى المفضلة</string>
+    <string name="share_movie">مشاركة الفيلم</string>
+    <string name="arabic_movies">أفلام عربية</string>
+    <string name="arabic_tv_shows">مسلسلات عربية</string>
+    <string name="category_egyptian">مصرية</string>
+    <string name="category_gulf">خليجية</string>
+    <string name="error_load_genres">فشل تحميل الأنواع</string>
+
+    <string name="recent_searches">عمليات البحث الأخيرة</string>
+    <string name="genre_suggestions">فئات مقترحة</string>
+    <string name="trending_now">الأكثر رواجًا الآن</string>
+    <string name="search_results_title">نتائج البحث</string>
+    <string name="clear_all">مسح الكل</string>
+
+</resources>

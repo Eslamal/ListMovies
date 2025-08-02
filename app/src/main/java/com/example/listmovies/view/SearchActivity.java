@@ -1,5 +1,8 @@
 package com.example.listmovies.view;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,37 +10,48 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.listmovies.R;
-import com.example.listmovies.adapter.MovieAdapter;
+import com.example.listmovies.adapter.ContentAdapter;
 import com.example.listmovies.database.SearchViewModel;
 import com.example.listmovies.database.SearchViewModelFactory;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class SearchActivity extends AppCompatActivity {
+import java.util.HashSet;
+import java.util.Set;
 
+public class SearchActivity extends BaseActivity {
+
+    // --- UI Components ---
     private TextInputEditText searchEditText;
     private RecyclerView recyclerView;
-    private MovieAdapter movieAdapter;
-    private ProgressBar progressBar;
+    private ContentAdapter contentAdapter;
+    private ShimmerFrameLayout shimmerFrameLayout;
     private View emptyStateLayout;
-    private View errorStateLayout;
-    private TextView errorTextView;
-    private ChipGroup chipGroupCategories;
+    private TextView resultsTitleTextView;
+    private ChipGroup chipGroupGenres;
+    private ChipGroup chipGroupRecent;
+    private MaterialButton clearHistoryButton;
+    private View recentSearchesHeader;
 
+
+    // --- Logic Components ---
     private SearchViewModel searchViewModel;
     private final Handler searchHandler = new Handler(Looper.getMainLooper());
     private Runnable searchRunnable;
+
+    // --- Constants for Recent Searches ---
+    private static final String PREFS_NAME = "SearchHistoryPrefs";
+    private static final String KEY_HISTORY = "history";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,19 +63,22 @@ public class SearchActivity extends AppCompatActivity {
         setupRecyclerView();
         setupViewModel();
         setupSearchListener();
-        addCategoryChips();
-
-        showEmptyState();
+        setupStaticGenreChips();
+        loadAndDisplayRecentSearches();
+        setupClearHistoryListener();
     }
 
     private void initializeViews() {
         searchEditText = findViewById(R.id.searchEditText);
         recyclerView = findViewById(R.id.recyclerView);
-        progressBar = findViewById(R.id.progressBar);
+        shimmerFrameLayout = findViewById(R.id.shimmer_view_container);
         emptyStateLayout = findViewById(R.id.emptyStateLayout);
-        errorStateLayout = findViewById(R.id.errorStateLayout);
-        errorTextView = findViewById(R.id.errorTextView);
-        chipGroupCategories = findViewById(R.id.chipGroupCategories);
+        resultsTitleTextView = findViewById(R.id.text_view_results_title);
+        chipGroupGenres = findViewById(R.id.chip_group_genres);
+        chipGroupRecent = findViewById(R.id.chip_group_recent);
+        clearHistoryButton = findViewById(R.id.button_clear_history);
+        // --- THIS LINE WAS MISSING FROM YOUR FILE ---
+        recentSearchesHeader = findViewById(R.id.recent_searches_header);
     }
 
     private void setupToolbar() {
@@ -69,90 +86,147 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle(R.string.search_movies);
+            getSupportActionBar().setTitle(R.string.search);
         }
     }
 
     private void setupRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        movieAdapter = new MovieAdapter(this);
-        recyclerView.setAdapter(movieAdapter);
+        contentAdapter = new ContentAdapter(this);
+        recyclerView.setAdapter(contentAdapter);
     }
 
     private void setupViewModel() {
         String apiKey = getString(R.string.api_key);
-        String language = "en-US";
-        SearchViewModelFactory factory = new SearchViewModelFactory(getApplication(), apiKey, language);
+        SearchViewModelFactory factory = new SearchViewModelFactory(getApplication(), apiKey);
         searchViewModel = new ViewModelProvider(this, factory).get(SearchViewModel.class);
 
-        searchViewModel.searchResults.observe(this, movies -> {
-            progressBar.setVisibility(View.GONE);
-            if (movies != null && !movies.isEmpty()) {
-                movieAdapter.setMovies(movies);
+        searchViewModel.results.observe(this, items -> {
+            boolean isSearchActive = searchEditText.getText() != null && searchEditText.getText().length() >= 2;
+
+            if (items != null && !items.isEmpty()) {
+                contentAdapter.setItems(items);
                 showContent();
-            } else if (movies != null) {
-                showNoSearchResults();
+                resultsTitleTextView.setText(isSearchActive ? R.string.search_results_title : R.string.trending_now);
+                resultsTitleTextView.setVisibility(View.VISIBLE);
+            } else {
+                // If the search was active but returned no items, show empty state
+                if (isSearchActive) {
+                    showEmptyState();
+                }
             }
         });
+
+        // Trigger the initial load for "Trending"
+        searchViewModel.loadInitialData();
     }
 
     private void setupSearchListener() {
         searchEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 searchHandler.removeCallbacks(searchRunnable);
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            @Override public void afterTextChanged(Editable s) {
                 String query = s.toString().trim();
+                searchRunnable = () -> {
+                    searchViewModel.setSearchQuery(query);
+                    if (query.length() >= 2) {
+                        saveSearchQuery(query);
+                    }
+                };
                 if (query.length() >= 2) {
                     showLoading();
-                    searchRunnable = () -> searchViewModel.setSearchQuery(query);
                     searchHandler.postDelayed(searchRunnable, 500);
                 } else {
-                    movieAdapter.setMovies(null);
-                    showEmptyState();
+                    searchViewModel.loadInitialData();
                 }
             }
         });
     }
 
-    private void addCategoryChips() {
-        String[] categories = {"Action", "Comedy", "Drama", "Sci-Fi", "Horror", "Thriller", "Animation"};
-        for (String category : categories) {
+    private void saveSearchQuery(String query) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        Set<String> history = new HashSet<>(prefs.getStringSet(KEY_HISTORY, new HashSet<>()));
+        history.add(query);
+        prefs.edit().putStringSet(KEY_HISTORY, history).apply();
+        loadAndDisplayRecentSearches();
+    }
+
+    private void loadAndDisplayRecentSearches() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        Set<String> history = prefs.getStringSet(KEY_HISTORY, new HashSet<>());
+
+        if (history.isEmpty()) {
+            recentSearchesHeader.setVisibility(View.GONE);
+            chipGroupRecent.setVisibility(View.GONE);
+        } else {
+            recentSearchesHeader.setVisibility(View.VISIBLE);
+            chipGroupRecent.setVisibility(View.VISIBLE);
+        }
+
+        chipGroupRecent.removeAllViews();
+        for (String query : history) {
             Chip chip = new Chip(this);
-            chip.setText(category);
-
-            // --- هذا هو التعديل الأساسي ---
+            chip.setText(query);
             chip.setOnClickListener(v -> {
-                String chipText = ((Chip) v).getText().toString();
-
-                // 1. تحديث مربع البحث عشان المستخدم يشوف هو اختار إيه
-                searchEditText.setText(chipText);
-
-                // 2. إظهار الـ ProgressBar فورًا (هذا يحل المشكلة)
-                showLoading();
-
-                // 3. إلغاء أي بحث مؤجل من الكتابة
-                searchHandler.removeCallbacks(searchRunnable);
-
-                // 4. بدء البحث مباشرةً بدون تأخير
-                searchViewModel.setSearchQuery(chipText);
+                searchEditText.setText(query);
+                searchEditText.setSelection(query.length());
             });
-            chipGroupCategories.addView(chip);
+            chipGroupRecent.addView(chip);
         }
     }
 
-    // --- دوال عرض الحالات المختلفة (تبقى كما هي) ---
-    private void showLoading() { /* ... */ }
-    private void showContent() { /* ... */ }
-    private void showEmptyState() { /* ... */ }
-    private void showNoSearchResults() { /* ... */ }
-    private void showErrorState(String message) { /* ... */ }
+    private void setupClearHistoryListener() {
+        clearHistoryButton.setOnClickListener(v -> {
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            prefs.edit().remove(KEY_HISTORY).apply();
+            loadAndDisplayRecentSearches();
+        });
+    }
+
+    private void setupStaticGenreChips() {
+        String[] categories = getResources().getStringArray(R.array.search_chip_categories);
+        String arabicMovies = getString(R.string.arabic_movies);
+        String arabicTvShows = getString(R.string.arabic_tv_shows);
+
+        chipGroupGenres.removeAllViews();
+        for (String category : categories) {
+            Chip chip = new Chip(this);
+            chip.setText(category);
+            chip.setOnClickListener(v -> {
+                String chipText = ((Chip) v).getText().toString();
+
+                    searchEditText.setText(chipText);
+                    searchEditText.setSelection(chipText.length());
+
+            });
+            chipGroupGenres.addView(chip);
+        }
+    }
+
+    private void showLoading() {
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmer();
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.GONE);
+        resultsTitleTextView.setVisibility(View.GONE);
+    }
+
+    private void showContent() {
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        emptyStateLayout.setVisibility(View.GONE);
+    }
+
+    private void showEmptyState() {
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
+        emptyStateLayout.setVisibility(View.VISIBLE);
+        resultsTitleTextView.setVisibility(View.GONE);
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

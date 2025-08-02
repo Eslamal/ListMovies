@@ -59,7 +59,7 @@ public class GenresFragment extends Fragment implements GenreAdapter.OnGenreClic
                 adapter.setGenres(genres);
                 recyclerView.setVisibility(View.VISIBLE);
             } else if (genres == null) {
-                Toast.makeText(getContext(), "Failed to load genres", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.error_load_genres, Toast.LENGTH_SHORT).show();
             }
         });
     }

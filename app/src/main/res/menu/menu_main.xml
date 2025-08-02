@@ -7,8 +7,8 @@
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_search_category_default"
-        android:title="@string/search_movies"
-        android:contentDescription="@string/search_movies"
+        android:title="@string/search"
+        android:contentDescription="@string/search"
         app:showAsAction="always"
         app:iconTint="@android:color/white" />
 
@@ -17,20 +17,19 @@
     <item
         android:id="@+id/action_favorites"
         android:icon="@drawable/ic_favorite"
-        android:title="@string/favorites"
-        android:contentDescription="@string/view_favorites"
+        android:title="@string/favorites_title"
+        android:contentDescription="@string/favorites_title"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_watchlist"
         android:icon="@drawable/ic_bookmark"
-        android:title="@string/watchlist"
+        android:title="@string/watchlist_title"
         android:contentDescription="View Watchlist"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_theme"
-        android:icon="@drawable/ic_palette"
-        android:title="@string/theme"
-        android:orderInCategory="101" />
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings" android:title="@string/settings"
+        app:showAsAction="never" />
 
 
 
