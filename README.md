@@ -4,7 +4,7 @@ A feature-rich movie and TV show browser application for Android, built with Jav
 The app allows users to discover, search, and manage their favorite movies and TV shows, 
 with full support for both English and Arabic languages.
 
-
+---
 
 ### ✨ Features
 
