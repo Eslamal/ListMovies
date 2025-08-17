@@ -22,7 +22,7 @@
             app:navigationIconTint="@android:color/white"
             app:layout_collapseMode="pin"
             android:elevation="0dp"
-            app:title="Movie Details" /> </com.google.android.material.appbar.AppBarLayout>
+            app:title="@string/details"/> </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

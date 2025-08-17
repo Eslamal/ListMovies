@@ -24,7 +24,7 @@
         android:id="@+id/action_watchlist"
         android:icon="@drawable/ic_bookmark"
         android:title="@string/watchlist_title"
-        android:contentDescription="View Watchlist"
+        android:contentDescription="@string/watchlist_title"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"

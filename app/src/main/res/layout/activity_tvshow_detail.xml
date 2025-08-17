@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="?attr/homeAsUpIndicator"
-            app:title="TV Show Details" />
+            app:title="@string/tv_show_details" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

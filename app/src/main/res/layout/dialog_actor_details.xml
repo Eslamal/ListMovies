@@ -50,7 +50,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Biography"
+                android:text="@string/actor_biography_title"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp"
                 android:textSize="16sp"/>
