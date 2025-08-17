@@ -1,27 +1,43 @@
 # ListMovies App 🎬
 
-A feature-rich Android movie discovery application built entirely in Java, following modern Android development practices. This app allows users to browse, search, and discover movies using the TMDb API. It features a complete user authentication system powered by Firebase, allowing users to manage their profiles, favorites, and watchlists.
+A feature-rich movie and TV show browser application for Android, built with Java and Material Design 3. 
+The app allows users to discover, search, and manage their favorite movies and TV shows, 
+with full support for both English and Arabic languages.
 
+---
 
-## ✨ Features
+### ✨ Features
 
--   **Movie Discovery:**
-    -   Browse lists for "Top Rated," "Popular," and by "Genre."
-    -   **Pagination / Infinite Scrolling:** Automatically loads more movies as the user scrolls.
--   **Movie Details:**
-    -   Rich detail screen with movie overview, rating, and release date.
-    -   Watch official movie **trailers**.
-    -   View a horizontal list of the movie's **cast**.
-    -   Tap on an actor to view their details in a dialog.
-    -   See legal **Watch Providers** (e.g., Netflix, etc.) based on the user's region.
--  **Favorites & Watchlist:** Users can add movies to their personal lists.
--   **Professional UI/UX:**
-    -   Modern UI built with **Material Design 3**.
-    -   Full support for **Light & Dark Themes**, switchable from the menu.
-    -   Seamless **Shared Element Transition** animation for posters.
-    -   **Google AdMob** banner ads for monetization.
-    -   Modern **Splash Screen** API implementation.
-    -   Graceful handling of loading, empty, and error states.
+* **Light & Dark Mode:** Full support for modern light and dark themes that can be set manually or follow the system setting.
+* **Bilingual (English & Arabic):** Complete UI translation and right-to-left (RTL) support.
+* **Dynamic Content Language:** Movie/TV show details (title, overview) are displayed in their original language (Arabic for Arabic content, English for others).
+* **Advanced Search:**
+    * **Live Search:** Get instant results for both movies and TV shows as you type.
+    * **Trending & Recent:** The search screen displays trending content by default and keeps a history of your recent searches.
+    * **Genre Filters:** Quick-search by tapping on translated genre chips.
+* **Discover Content:**
+    * Browse by categories like Popular, Top Rated, and Genres.
+    * Dedicated section for Arabic content, subdivided into Egyptian and Gulf categories.
+* **Personal Lists:**
+    * **Favorites:** Add any movie or TV show to a local favorites list.
+    * **Watchlist:** Keep track of what you want to watch later.
+* **Modern UI:**
+    * Built with Material Design 3 components.
+    * Smooth shimmer loading effects.
+    * Shared element transitions for a seamless experience.
+
+---
+
+### 🛠️ Tech Stack & Libraries
+
+* **Language:** Java
+* **Architecture:** MVVM (ViewModel, Repository, LiveData)
+* **UI:** Android SDK, Material Design 3, Shimmer (by Facebook)
+* **Networking:** Retrofit 2
+* **Database:** Room Persistence Library
+* **Image Loading:** Picasso
+* **API:** The Movie Database (TMDb) API
+
 
 ---
 
@@ -37,21 +53,3 @@ The application is built using the **MVVM (Model-View-ViewModel)** architecture 
         -   **Retrofit:** For consuming the TMDb REST API.
     -   **Local:**
         -   **Room Persistence Library:** For local data storage (user lists like Favorites/Watchlist in guest mode) and caching.
-
----
-
-## 🛠️ Tech Stack & Libraries
-
--   **Language:** Java
--   **Architecture:** MVVM (ViewModel, LiveData)
--   **Android Jetpack:**
-    -   Fragments, ViewPager2, RecyclerView
-    -   Room Persistence Library
-    -   Lifecycle Components
-    -   Preference KTX (for settings)
-    -   SplashScreen API
--   **Networking:**
-    -   Retrofit2 & Gson
--   **Image Loading:** Picasso
--   **UI:** Material Design 3
--   **Ads:** Google AdMob
